@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+group = 'ru.netology.qa'
+version = '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // MySQL JDBC-драйвер
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+
+    // Apache DBUtils — работа с БД в SqlHelper
+    implementation 'commons-dbutils:commons-dbutils:1.8.1'
+
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+
+    // REST-assured — API-тесты
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+
+    // Allure для JUnit 5
+    testImplementation 'io.qameta.allure:allure-junit5:2.25.0'
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty 'db.url', System.getProperty('db.url', 'jdbc:mysql://localhost:3306/app')
+    systemProperty 'db.user', System.getProperty('db.user', 'app')
+    systemProperty 'db.password', System.getProperty('db.password', 'pass')
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+
+allure {
+    version = '2.25.0'
+    useJUnit5 {
+        version = '2.25.0'
+    }
+}
