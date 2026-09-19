@@ -1,0 +1,66 @@
+package ru.netology.qa.helper;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import ru.netology.qa.dto.AuthRequest;
+import ru.netology.qa.dto.CardDto;
+import ru.netology.qa.dto.TokenResponse;
+import ru.netology.qa.dto.TransferRequest;
+import ru.netology.qa.dto.VerificationRequest;
+
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
+
+public class RestHelper {
+
+    static {
+        RestAssured.baseURI = "http://localhost:9999";
+    }
+
+    private RestHelper() {
+    }
+
+    public static void login(AuthRequest request) {
+        given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/api/auth")
+                .then()
+                .statusCode(200);
+    }
+
+    public static String verify(VerificationRequest request) {
+        return given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/api/auth/verification")
+                .then()
+                .statusCode(200)
+                .extract().as(TokenResponse.class)
+                .getToken();
+    }
+
+    public static List<CardDto> getCards(String token) {
+        return List.of(given()
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .get("/api/cards")
+                .then()
+                .statusCode(200)
+                .extract().as(CardDto[].class));
+    }
+
+    public static int transferAndGetStatusCode(String token, TransferRequest request) {
+        return given()
+                .header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/api/transfer")
+                .then()
+                .extract().statusCode();
+    }
+}

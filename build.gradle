@@ -14,25 +14,16 @@ repositories {
 }
 
 dependencies {
-    // MySQL JDBC-драйвер
-    implementation 'com.mysql:mysql-connector-j:8.3.0'
-
-    // Apache DBUtils — работа с БД в SqlHelper
-    implementation 'commons-dbutils:commons-dbutils:1.8.1'
-
-    // JUnit 5
+    testImplementation 'com.mysql:mysql-connector-j:8.3.0'
+    testImplementation 'commons-dbutils:commons-dbutils:1.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
-
-    // REST-assured — API-тесты
     testImplementation 'io.rest-assured:rest-assured:5.4.0'
-
-    // Allure для JUnit 5
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
     testImplementation 'io.qameta.allure:allure-junit5:2.25.0'
-}
 
-compileJava {
-    options.encoding = 'UTF-8'
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 compileTestJava {
