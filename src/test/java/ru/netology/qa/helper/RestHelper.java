@@ -2,6 +2,8 @@ package ru.netology.qa.helper;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import ru.netology.qa.data.DataHelper;
+import ru.netology.qa.db.SqlHelper;
 import ru.netology.qa.dto.AuthRequest;
 import ru.netology.qa.dto.CardDto;
 import ru.netology.qa.dto.TokenResponse;
@@ -41,6 +43,12 @@ public class RestHelper {
                 .statusCode(200)
                 .extract().as(TokenResponse.class)
                 .getToken();
+    }
+
+    public static String loginAsDemoUser() {
+        login(DataHelper.demoAuthRequest());
+        String code = SqlHelper.getVerificationCode(DataHelper.DEMO_LOGIN);
+        return verify(DataHelper.verificationRequest(code));
     }
 
     public static List<CardDto> getCards(String token) {
