@@ -61,6 +61,15 @@ public class RestHelper {
                 .extract().as(CardDto[].class));
     }
 
+    public static int getCardBalance(String token, String fullCardNumber) {
+        String last4 = fullCardNumber.substring(fullCardNumber.length() - 4);
+        return getCards(token).stream()
+                .filter(card -> card.getNumber().endsWith(last4))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Card not found: " + fullCardNumber))
+                .getBalance();
+    }
+
     public static int transferAndGetStatusCode(String token, TransferRequest request) {
         return given()
                 .header("Authorization", "Bearer " + token)
